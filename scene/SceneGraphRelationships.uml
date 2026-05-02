@@ -1,0 +1,119 @@
+@startuml
+title Scene Graph Node Relationships
+
+class SceneNode #LightCyan{
+  - name_ : string
+  - node_type_ : SceneNodeType
+  - children_ : vector<shared_ptr<SceneNode>>
+  --
+  + draw(scene_state : SceneState) : void
+  + update(scene_state : SceneState) : void
+  + add_child(node : shared_ptr<SceneNode>) : void
+  + destroy() : void
+  + node_type() : SceneNodeType
+  + set_name(nm : char*) : void
+  + get_name() : string
+}
+
+class TransformNode #AliceBlue{
+  + load_identity() : void
+  + translate(x : float, y : float, z : float) : void
+  + rotate(deg : float, v : Vector3&) : void
+  + rotate_x(deg : float) : void
+  + rotate_y(deg : float) : void
+  + rotate_z(deg : float) : void
+  + scale(x : float, y : float, z : float) : void
+  + draw(scene_state : SceneState) : void
+  + update(scene_state : SceneState) : void
+}
+
+class PresentationNode #AliceBlue{
+  + draw(scene_state : SceneState) : void
+}
+
+class GeometryNode #AliceBlue{
+  + draw(scene_state : SceneState) : void
+}
+
+class CameraNode #AliceBlue{
+  + CameraNode()
+}
+
+abstract class ShaderNode #AliceBlue {
+  - vertex_shader_ : GLSLVertexShader
+  - fragment_shader_ : GLSLFragmentShader
+  - shader_program_ : GLSLShaderProgram
+  -- 
+  + create(vertex_shader_filename : char*, fragment_shader_filename : char*) : bool
+  + create_from_source(vertex_shader_source : char*, fragment_shader_source: char*) : bool
+  + get_locations() : bool
+}
+
+class SceneState {
+  + position_loc : GLint
+  + ortho_matrix_loc : GLint
+  + color_loc : GLint
+  + ortho : array<float, 16>
+}
+
+enum SceneNodeType {
+  BASE
+  PRESENTATION
+  TRANSFORM
+  GEOMETRY
+  SHADER
+  CAMERA
+}
+
+enum ProjectionType {
+  PERSPECTIVE
+  ORTHOGRAPHIC
+}
+
+class GLSLVertexShader
+class GLSLFragmentShader
+class GLSLShaderProgram
+
+SceneNode <|-- TransformNode : is-a
+SceneNode <|-- PresentationNode : is-a
+SceneNode <|-- GeometryNode : is-a
+SceneNode <|-- CameraNode : is-a
+SceneNode <|-- ShaderNode : is-a
+
+SceneNode -up-> SceneState : uses during draw/update
+SceneNode -up-> SceneNodeType : has type
+SceneNode "1" o-- "0..*" SceneNode : children ~ one SceneNode can have 0 or more children
+
+CameraNode --> ProjectionType : uses projection type
+
+ShaderNode *-- GLSLVertexShader : owns
+ShaderNode *-- GLSLFragmentShader : owns
+ShaderNode *-- GLSLShaderProgram : owns
+
+note bottom of TransformNode #MintCream
+Controls WHERE objects appear.
+Moves, rotates, or scales its children.
+end note
+
+note bottom of PresentationNode #MintCream
+Controls HOW objects look.
+Sets color/material/shader state.
+end note
+
+note bottom of GeometryNode #MintCream
+Draws the actual shape.
+Usually a leaf node with no children.
+end note
+
+note bottom of CameraNode #MintCream
+Controls HOW the scene is viewed
+Represents the viewer/camera
+May use perspective or orthographic projection
+end note 
+
+note top of ShaderNode #MintCream
+Controls GPU shader behavior
+Activate shader programs and gets shader variable get_locations
+end note
+
+@enduml
