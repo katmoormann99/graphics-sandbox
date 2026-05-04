@@ -6,7 +6,7 @@ A sandbox for learning OpenGL, experimenting with rendering techniques, and buil
 
 ### SDL3
 
-**SDL3** is a cross-platform library for creating windows, handling keyboard/mouse input, audio, controllers, and creating graphics contexts for OpenGL/Vulkan/Metal/etc. It officially supports Windows, macOS, Linux, iOS, and others. 
+**SDL3** is a cross-platform library for creating windows, handling keyboard/mouse input, audio, controllers, and creating graphics contexts for OpenGL/Vulkan/Metal/etc. It officially supports Windows, macOS, Linux, iOS, and others.
 
 ### OpenGL
 
@@ -37,5 +37,25 @@ Verify SDL: </br>
 `mkdir src include shaders build`</br>
 `touch src/main.cpp`</br>
 `touch CMakeLists.txt`</br>
+
+## OpenGL Pipeline Overview
+
+1. **Vertex Specification**</b> This is where OpenGL receives the raw vertex data for an object. Vertex data usually includes positions, colors, normals, texture coordinates, and sometimes index data.</b>
+
+2. **Vertex Shader**</b> The vertex shader runs once per every vertex. This is where transformations matter.
+
+3. **Tessellation**</b>
+
+4. **Geometry Shader**
+
+5. **Vertex Post-Processing**
+
+6. **Primitive Assembly**
+
+7. **Rasterization**
+
+8. **Fragment Shader**
+
+9. **Per-Sample Operations**
 
 

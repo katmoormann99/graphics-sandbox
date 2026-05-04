@@ -1,0 +1,34 @@
+@startuml
+title OpenGL Rendering Pipeline
+
+skinparam linetype ortho
+top to bottom direction
+
+rectangle "1. Vertex Specification\n\nReceives raw vertex data:\npositions, colors, normals,\ntexture coordinates, indices" as VSPEC #LightYellow
+
+rectangle "2. Vertex Shader\n\nRuns once per vertex.\nApplies transformations\n(model/view/projection)." as VSHADER #LightBlue
+
+rectangle "3. Tessellation\n\nOptional stage.\nSubdivides geometry into\nsmaller pieces for detail." as TESS #LightGray
+
+rectangle "4. Geometry Shader\n\nOptional stage.\nCan create, modify,\nor discard primitives." as GSHADER #LightGray
+
+rectangle "5. Vertex Post-Processing\n\nPerforms clipping and prepares\nvertices for assembly." as VPOST #LightYellow
+
+rectangle "6. Primitive Assembly\n\nGroups vertices into\ntriangles, lines, or points." as PRIM #LightYellow
+
+rectangle "7. Rasterization\n\nConverts primitives into\nfragments (potential pixels)." as RAST #LightYellow
+
+rectangle "8. Fragment Shader\n\nRuns per fragment.\nDetermines final color,\nlighting, textures." as FSHADER #LightBlue
+
+rectangle "9. Per-Sample Operations\n\nDepth testing,\nstencil testing,\nblending, framebuffer write." as PSAMPLE #LightYellow
+
+VSPEC --> VSHADER
+VSHADER --> TESS
+TESS --> GSHADER
+GSHADER --> VPOST
+VPOST --> PRIM
+PRIM --> RAST
+RAST --> FSHADER
+FSHADER --> PSAMPLE
+
+@enduml
