@@ -59,3 +59,8 @@ Verify SDL: </br>
 9. **Per-Sample Operations**
 
 
+
+
+## Graphics Pipeline Diagram
+
+![Graphics Pipeline](GraphicsPipeline.svg)
