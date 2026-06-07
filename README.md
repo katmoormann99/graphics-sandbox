@@ -2,6 +2,8 @@
 
 A sandbox for learning OpenGL, experimenting with rendering techniques, and building interactive 3D scenes.
 
+![SceneGraphRelationships](/Users/moormkf1/Repositories/graphics-sandbox/scene/SceneGraphRelationships.svg)
+
 ## Downloaded Pieces
 
 ### SDL3
