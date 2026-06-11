@@ -10,7 +10,7 @@ rectangle "2. Vertex Shader\n\nRuns once per vertex.\nModel * View * Projection\
 
 rectangle "3. Tessellation Shader\n(Optional)\n\nSubdivide geometry\nfor additional detail." as TESS #LightGray
 
-rectangle "4. Fragment Shader\n(Optional)\n\nCreate, modify,\nor discard primitives." as GSHADER #LightGray
+rectangle "4. Geometry Shader\n(Optional)\n\nCreate, modify,\nor discard primitives." as GSHADER #LightGray
 
 rectangle "5. Clipping\n\nClip primitives against\nview frustum planes.\nMay generate new vertices." as CLIP #LightYellow
 
@@ -24,50 +24,20 @@ rectangle "9. Rasterization\n\nDetermine covered pixels.\nCompute barycentric\nc
 
 rectangle "10. Fragment Shader\n\nRuns per fragment.\nTexture sampling,\nlighting, shading." as FSHADER #LightBlue
 
-rectangle "11. Per-Fragment Operations
+rectangle "11. Per-Fragment Operations\n\nDepth Test\nStencil Test\nBlending\nMSAA" as PFO #LightYellow
 
-Depth Test
-Stencil Test
-Blending
-MSAA Resolve
+rectangle "12. Framebuffer\n\nFinal pixel colors\nstored in render target." as FB #LightGreen
 
-Determines whether
-the fragment survives
-and how it combines
-with existing pixels." as PFO #LightYellow
-
-rectangle "12. Framebuffer
-
-GPU memory containing:
-
-• Color Buffer
-• Depth Buffer
-• Stencil Buffer
-
-Stores the final image
-being rendered." as FB #LightGreen
-
-rectangle "13. Display / Screen
-
-Monitor scans the
-framebuffer contents
-and emits photons.
-
-This is the image
-the user sees." as DISPLAY #LightBlue
-
-PFO --> FB
-FB --> DISPLAY
-VSPEC --> VSHADER
-VSHADER --> TESS
-TESS --> GSHADER
+VSPEC -right-> VSHADER
+VSHADER -right-> TESS
+TESS -right-> GSHADER
 GSHADER --> CLIP
-CLIP --> PDIV
-PDIV --> VIEWPORT
-VIEWPORT --> PRIM
+CLIP -left-> PDIV
+PDIV -left-> VIEWPORT
+VIEWPORT -left-> PRIM
 PRIM --> RAST
-RAST --> FSHADER
-FSHADER --> PFO
-PFO --> FB
+RAST -right-> FSHADER
+FSHADER -right-> PFO
+PFO -right-> FB
 
 @enduml

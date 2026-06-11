@@ -38,21 +38,21 @@ rectangle "16. Framebuffer\n\nGPU memory storing render results.\n\nUsually cont
 
 rectangle "17. Display\n\nThe rendered framebuffer is\npresented to the screen.\n\nThe monitor reads pixel colors\nand emits light.\n\nThis is the final visible image." as DISPLAY #LightBlue
 
-LOCAL --> MODEL
-MODEL --> WORLD
-WORLD --> VIEW
-VIEW --> CAM
-CAM --> PROJ
+LOCAL -right-> MODEL
+MODEL -right-> WORLD
+WORLD -right-> VIEW
+VIEW -right-> CAM
+CAM -right-> PROJ
 PROJ --> CLIP
-CLIP --> DIV
-DIV --> NDC
-NDC --> VP
-VP --> SCREEN
+CLIP -left-> DIV
+DIV -left-> NDC
+NDC -left-> VP
+VP -left-> SCREEN
 SCREEN --> PRIM
-PRIM --> RAST
-RAST --> FS
-FS --> PFO
-PFO --> FB
+PRIM -right-> RAST
+RAST -right-> FS
+FS -right-> PFO
+PFO -right-> FB
 FB --> DISPLAY
 
 @enduml

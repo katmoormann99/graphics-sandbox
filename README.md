@@ -68,4 +68,6 @@ Verify SDL: </br>
 
 ![Graphics Pipeline](GraphicsPipeline.svg)
 
+## Coordinate Space Journey of a Vertex
+
 ![Coordinate Space Journey of a Vertex](CoordinateSpaceJourneyOfAVertex.svg)
