@@ -1,0 +1,58 @@
+@startuml
+title From OBJ File to Pixels on Screen
+
+skinparam linetype ortho
+top to bottom direction
+
+rectangle "1. OBJ / Mesh Data\n\nLocal/Object Space\n\nVertex data:\n- Position: x, y, z\n- Normal\n- UV coordinates\n- Vertex color\n\nIndex buffer tells OpenGL\nwhich vertices form triangles.\n\nCPU loads mesh and uploads\nbuffers to GPU." as LOCAL #LightBlue
+
+rectangle "2. Model Matrix\n\nTransforms object from\nlocal space to world space.\n\nUsually includes:\n- Translation\n- Rotation\n- Scale\n\nUsed in the vertex shader." as MODEL #LightYellow
+
+rectangle "3. World Space\n\nObject now has a position\ninside the scene.\n\nExample:\nBunny at world position\n(10, 0, 5)." as WORLD #LightBlue
+
+rectangle "4. View Matrix\n\nTransforms world space into\ncamera/view space.\n\nThis makes the camera behave\nas if it is at the origin.\n\nUsed in the vertex shader." as VIEW #LightYellow
+
+rectangle "5. View / Camera Space\n\nCoordinates are now relative\nto the camera.\n\nX = left/right\nY = up/down\nZ = depth from camera." as CAM #LightBlue
+
+rectangle "6. Projection Matrix\n\nTransforms camera space into\nclip space.\n\nApplies perspective:\nfarther objects appear smaller.\n\nUsed in the vertex shader." as PROJ #LightYellow
+
+rectangle "7. Clip Space\n\nHomogeneous coordinates:\n\nx, y, z, w\n\nVisible range:\n-w to +w for x\n-w to +w for y\n-w to +w for z\n\nOpenGL clips geometry outside\nthe view frustum." as CLIP #LightBlue
+
+rectangle "8. Perspective Divide\n\nConverts clip space to NDC:\n\nx_ndc = x / w\ny_ndc = y / w\nz_ndc = z / w\n\nThis step is fixed-function\nGPU hardware." as DIV #LightYellow
+
+rectangle "9. NDC\n\nNormalized Device Coordinates\n\nVisible coordinate range:\nx from -1 to +1\ny from -1 to +1\nz from -1 to +1\n\nStill not pixels yet." as NDC #LightBlue
+
+rectangle "10. Viewport Transform\n\nMaps NDC coordinates to\nscreen pixel coordinates.\n\nExample for 1920 x 1080:\n\nx_screen = (x_ndc + 1) / 2 * width\ny_screen = (1 - (y_ndc + 1) / 2) * height" as VP #LightYellow
+
+rectangle "11. Screen Space Vertices\n\nVertices now have pixel-like\npositions on the screen.\n\nExample triangle:\nA = (100, 100)\nB = (300, 100)\nC = (200, 300)\n\nStill only vertices.\nNo pixels have been drawn yet." as SCREEN #LightBlue
+
+rectangle "12. Primitive Assembly\n\nOpenGL uses the index buffer\nto group vertices into primitives.\n\nExample:\nindices 0, 1, 2\nform one triangle.\n\nFixed-function GPU stage." as PRIM #LightGreen
+
+rectangle "13. Rasterization\n\nConverts triangles into fragments.\n\nFor each triangle:\n1. Compute bounding box\n2. Test pixel centers\n3. Use edge functions\n4. Compute barycentric coordinates\n5. Generate fragments\n\nFragments are candidate pixels." as RAST #LightGreen
+
+rectangle "14. Fragment Shader\n\nRuns once per fragment.\n\nReceives interpolated data:\n- UV coordinates\n- Normal\n- Color\n- Depth\n\nComputes output color using:\n- Textures\n- Lighting\n- Materials" as FS #LightGreen
+
+rectangle "15. Per-Fragment Operations\n\nAfter fragment shader:\n\n- Depth test\n- Stencil test\n- Blending\n- Multisampling\n\nA fragment may be discarded\nor combined with an existing pixel." as PFO #LightYellow
+
+rectangle "16. Framebuffer\n\nGPU memory storing render results.\n\nUsually contains:\n- Color buffer\n- Depth buffer\n- Stencil buffer\n\nSurviving fragments write values\ninto framebuffer pixel locations." as FB #LightGreen
+
+rectangle "17. Display\n\nThe rendered framebuffer is\npresented to the screen.\n\nThe monitor reads pixel colors\nand emits light.\n\nThis is the final visible image." as DISPLAY #LightBlue
+
+LOCAL --> MODEL
+MODEL --> WORLD
+WORLD --> VIEW
+VIEW --> CAM
+CAM --> PROJ
+PROJ --> CLIP
+CLIP --> DIV
+DIV --> NDC
+NDC --> VP
+VP --> SCREEN
+SCREEN --> PRIM
+PRIM --> RAST
+RAST --> FS
+FS --> PFO
+PFO --> FB
+FB --> DISPLAY
+
+@enduml
