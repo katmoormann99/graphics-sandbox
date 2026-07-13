@@ -1,6 +1,6 @@
 #include "scene/camera_node.hpp"
 
-#include "geometry/geometry.hpp
+#include "geometry/geometry.hpp"
 
 namespace cg
 {

@@ -172,3 +172,4 @@ Vector3 operator*(float s, const Vector3 &v)
 {
     return Vector3(v.x * s, v.y * s, v.z * s);
 }
+}

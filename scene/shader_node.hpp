@@ -59,7 +59,7 @@ class ShaderNode : public SceneNode
             const char *fragment_shader_filename
         );
 
-        bool create_from_soure (
+        bool create_from_source (
             const char *vertex_shader_filename,
             const char *fragment_shader_filename
         );
@@ -97,7 +97,7 @@ class ShaderNode : public SceneNode
          * This combines both shaders into something OpenGL can use
          */
         GLSLShaderProgram shader_program_;
-}
+};
 } // namespace cg
 
 #endif

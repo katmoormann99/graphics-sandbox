@@ -9,40 +9,6 @@
 //
 //============================================================================
 
-
-/**
- * TransformNode controls where an object appears in the scene.
- *
- * It does NOT draw actual shapes.
- *
- * Instead, it modifies the transformation matrix before telling its
- * child nodes to draw.
- *
- * This allows you to:
- *
- * - move objects → translate()
- * - rotate objects → rotate()
- * - resize objects → scale()
- *
- * Think of this node as changing the coordinate system for everything
- * below it in the scene graph.
- *
- * Example:
- *
- * TransformNode
- *    └── GeometryNode (cube)
- *
- * If the TransformNode translates by (5,0,0),
- * the cube will appear moved 5 units to the right.
- *
- * If it rotates 90 degrees,
- * the cube rotates too.
- *
- * Important:
- * The TransformNode itself usually does NOT draw anything.
- * It simply changes position/orientation/size for its children.
- */
-
 #ifndef __SCENE_TRANSFORM_NODE_HPP__
 #define __SCENE_TRANSFORM_NODE_HPP__
 

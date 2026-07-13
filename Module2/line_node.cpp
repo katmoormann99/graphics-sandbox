@@ -2,9 +2,6 @@
 
 #include "scene/scene.hpp"
 
-#include <SDL_opengl_glext.h>
-#include <SDL_opengles2_gl2.h>
-
 /**
  * Mental Model 
  *
@@ -47,12 +44,12 @@ namespace cg
         glGenVertexArrays(1, &vao_);
     };
 
-    LineNode:~LineNode(){
+    LineNode::~LineNode(){
         /**
          * Tell OpenGL to delete the GPU resources when this object is destroyed
          */
         glDeleteBuffers(1, &vbo_);
-        glDeleteVertexArrays
+        glDeleteVertexArrays;
     }
 
     void LineNode::add(float x, float y, int32_t position_loc){
@@ -78,7 +75,7 @@ namespace cg
          * GL_DYNAMIC_DRAW = tells OpenGL that this data will change often because 
          *      the user will continue to add points
          */
-        glBufferData(GL_ARRAY_BUFFER, vertex_list.size() * sizeof(Point2), (GLvoid *)&vertex_list[0], GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertex_list_.size() * sizeof(Point2), (GLvoid *)&vertex_list_[0], GL_DYNAMIC_DRAW);
 
         /**
          * Bind (activate) the VAO
@@ -127,7 +124,7 @@ namespace cg
 
             // Draw the connected line segments 
             // static_cast<GLsizei>(vertex_list.size()) needed because std::size_t is usually an unsigned long on the Mac - but openGL wants an int
-            glDrawArrays(GL_LINE_STRIP, 0, static_cast<GLsizei>(vertex_list.size()));
+            glDrawArrays(GL_LINE_STRIP, 0, static_cast<GLsizei>(vertex_list_.size()));
 
             // Unbind the VAO 
             glBindVertexArray(0);

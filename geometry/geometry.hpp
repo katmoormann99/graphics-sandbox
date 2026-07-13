@@ -61,21 +61,21 @@ float fast_inv_sqrt(float x);
 
 // Include individual geometry files
 // clang-format off
-// #include "geometry/hpoint2.hpp"
-// #include "geometry/point2.hpp"
-// #include "geometry/hpoint3.hpp"
-// #include "geometry/point3.hpp"
-// #include "geometry/vector2.hpp"
-// #include "geometry/vector3.hpp"
-// #include "geometry/segment2.hpp"
-// #include "geometry/segment3.hpp"
-// #include "geometry/plane.hpp"
-// #include "geometry/aabb.hpp"
-// #include "geometry/bounding_sphere.hpp"
-// #include "geometry/ray3.hpp"
-// #include "geometry/noise.hpp"
-// #include "geometry/matrix.hpp"
-// #include "geometry/types.hpp"
+#include "geometry/hpoint2.hpp"
+#include "geometry/point2.hpp"
+#include "geometry/hpoint3.hpp"
+#include "geometry/point3.hpp"
+#include "geometry/vector2.hpp"
+#include "geometry/vector3.hpp"
+#include "geometry/segment2.hpp"
+#include "geometry/segment3.hpp"
+#include "geometry/plane.hpp"
+#include "geometry/aabb.hpp"
+#include "geometry/bounding_sphere.hpp"
+#include "geometry/ray3.hpp"
+#include "geometry/noise.hpp"
+#include "geometry/matrix.hpp"
+#include "geometry/types.hpp"
 // clang-format on
 
 #endif

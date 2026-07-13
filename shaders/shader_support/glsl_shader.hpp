@@ -7,71 +7,85 @@
 //	File:    glsl_shader.hpp
 //	Purpose: Support for loadng a shader from a file and compiling it
 //
-//  Modified by Kat Moormann Friday May 01 2026
 //============================================================================
 
 #ifndef __SHADER_SUPPORT_GLSL_SHADER_HPP__
 #define __SHADER_SUPPORT_GLSL_SHADER_HPP__
 
-#include "filesystems/file_loader.hpp"
+#include "filesystem_support/file_loader.hpp"
 #include "scene/graphics.hpp"
 
 namespace cg
 {
 
 /**
- * Base GLSL shader class
- * 
- * This class contains functionality shared by different shader types
- * It can: 
- * - load shader source code from a file
- * - compile shader source code 
- * - check whether compilation succeeded
- * - log compile errors
+ * Base shader class. Loads from file. Checks compile status.
  */
 class GLSLShader
 {
-    public:
-        // Prevent creating a generic shader without specifying its source/name and type
-        GLSLShader() = delete;
-        GLSLShader(const std::string &shader_str, GLenum shader_type);
+  public:
+    GLSLShader() = delete;
 
-        // Create and compile a shader from source code text
-        bool create_from_source(const char *source);
+    GLSLShader(const std::string &shader_str, GLenum shader_type);
 
-        // Load shader source code from a file, then create and compile the shader
-        bool create(const char *filename);
+    /**
+     * Create shader from source code chararacter array.
+     * @param  source  Source code for the shader.
+     * @return  Returns true if successful, false if not.
+     */
+    bool create_from_source(const char *source);
 
-        // Get the OpenGL shader handle
-        GLuint get() const;
+    /**
+     * Create shader from source code file.
+     * @param  filename File name for the source code for the shader.
+     * @return  Returns true if successful, false if not.
+     */
+    bool create(const char *filename);
 
-    protected:
-        std::string shader_type_str;
+    /**
+     * Get the shader handle.
+     * @return Returns a handle to the shader.
+     */
+    GLuint get() const;
 
-        // OpenGL shader type: GL_VERTEX_SHADER or GL_FRAGMENT_SHADER
-        GLenum gl_shader_type;
+  protected:
+    std::string shader_type_str_;
+    GLenum      gl_shader_type_;
+    GLuint      gl_shader_;
 
-        GLuint gl_shader_;
+    /**
+     * Check the compile status of a shader.
+     * @return  Returns true if the compile status is success.
+     */
+    bool check_compile_status(GLuint shader);
 
-        // Check whether a shader compiled successfully
-        bool check_compile_status(GLuint shader);
+    // Utility to read a shader source file
+    bool read_shader_source(const char *filename, FileContents &file_contents);
 
-        // Read shader source code from a file into a FileContents object
-        bool read_shader_source(const char *filename, FileContents &file_contents);
+    /**
+     * Logs a shader compile error
+     */
+    void log_compile_error(GLuint shader);
+};
 
-}
-
+/**
+ * GLSL vertex shader
+ */
 class GLSLVertexShader : public GLSLShader
 {
-    public:
-        GLSLVertexShader();
+  public:
+    GLSLVertexShader();
+};
 
-}
-
+/**
+ * GLSL fragment shader
+ */
 class GLSLFragmentShader : public GLSLShader
 {
-    public:
-        GLSLFragmentShader();
+  public:
+    GLSLFragmentShader();
+};
 
-}
 } // namespace cg
+
+#endif

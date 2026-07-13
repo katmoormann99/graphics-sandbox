@@ -14,8 +14,6 @@ PresentationNode / ShaderNode
 GeometryNode
 ```
 
----
-
 # Core Scene Graph Nodes
 
 | Node             | Responsibility               |
@@ -27,7 +25,6 @@ GeometryNode
 | GeometryNode     | Actual rendering/drawing     |
 | CameraNode       | View/projection setup        |
 
----
 
 # SceneNode
 
@@ -42,7 +39,6 @@ It provides:
 
 Every other node inherits from this class.
 
----
 
 # TransformNode
 
@@ -85,7 +81,6 @@ Mental model:
 
 > "Everything beneath me is transformed."
 
----
 
 # PresentationNode
 
@@ -118,7 +113,6 @@ Mental model:
 
 > "I style the object."
 
----
 
 # ShaderNode
 
@@ -161,8 +155,6 @@ Mental model:
 
 > "I control how the GPU processes rendering."
 
----
-
 # GeometryNode
 
 `GeometryNode` is where actual rendering happens.
@@ -194,8 +186,6 @@ Mental model:
 
 > "I draw the actual object."
 
----
-
 # CameraNode
 
 `CameraNode` controls how the scene is viewed.
@@ -220,8 +210,6 @@ Mental model:
 
 > "I define the viewer's perspective."
 
----
-
 # Overall Rendering Flow
 
 Typical traversal:
@@ -243,8 +231,6 @@ GeometryNode
     draw mesh
 ```
 
----
-
 # Simple Mental Analogy
 
 | Node             | Analogy                      |
@@ -254,8 +240,6 @@ GeometryNode
 | PresentationNode | painting/styling the object  |
 | ShaderNode       | rendering technique/lighting |
 | GeometryNode     | actual object mesh           |
-
----
 
 # Biggest Conceptual Takeaway
 
@@ -272,4 +256,14 @@ That separation is the main power of scene graph design.
 
 ## Scene Graph Node Relationships
 
-![Scene Graph Node Relationships](SceneGraphRelationships.svg)
+![Scene Graph Node Relationships](../SceneGraphRelationships.svg)
+
+
+
+
+### Generating PDF
+```
+pandoc readMe.md \
+  --include-in-header=header.tex \
+  -o readMe.pdf
+```

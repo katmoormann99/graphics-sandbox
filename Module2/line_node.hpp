@@ -16,7 +16,6 @@
 #include "geometry/point2.hpp"
 #include "scene/color4.hpp"
 #include <vector>
-#include <SDL_opengl.h>
 
 namespace cg 
 {
