@@ -145,7 +145,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 set(SUB_LIB_LIST "")
 add_subdirectory(scene)
 add_subdirectory(geometry)
-add_subdirectory(shaders/shader_support)
+add_subdirectory(shader_support)
 add_subdirectory(filesystem_support)
 
 

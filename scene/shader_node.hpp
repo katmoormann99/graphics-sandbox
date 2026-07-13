@@ -28,8 +28,8 @@
 
 #include "scene/scene_node.hpp"
 
-#include "shaders/shader_support/glsl_shader.hpp"
-#include "shaders/shader_support/glsl_shader_program.hpp"
+#include "shader_support/glsl_shader.hpp"
+#include "shader_support/glsl_shader_program.hpp"
 
 namespace cg
 {
