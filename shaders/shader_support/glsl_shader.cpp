@@ -1,6 +1,6 @@
-#include "shader_support/glsl_shader.hpp"
-#include "file_systems/file_loader.hpp"
-
+#include "shaders/shader_support/glsl_shader.hpp"
+#include "filesystem_support/file_loader.hpp"
+#include "filesystem_support/file_locator.hpp"
 #include <iostream>
 
 namespace cg 
@@ -49,11 +49,14 @@ namespace cg
 
         // passing the cleaned shader source code into create_from_source
         bool success = create_from_source(file_contents.data);
-        file_contents.destroy;
+        file_contents.destroy();
         return success;
     };
 
-    GLuint GLSLShader::get() const { return gl_shader_};
+    GLuint GLSLShader::get() const
+    {
+        return gl_shader_;
+    }
 
     bool GLSLShader::check_compile_status(GLuint shader) {
         int param = 0;

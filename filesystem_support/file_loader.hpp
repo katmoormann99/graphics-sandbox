@@ -6,8 +6,6 @@
 //	Author:  Brian Russin
 //	File:    file_loader.hpp
 //	Purpose: Loads file contents from the filesystem.
-//
-//  Modified by Kat Moormann Friday May 01 2026
 //============================================================================
 
 #ifndef __FILESYSTEM_SUPPORT_FILE_LOADER_HPP__
@@ -16,16 +14,13 @@
 #include <cstdint>
 #include <string>
 
-namespace cg{
+namespace cg
+{
 
 struct FileContents
 {
-    // Total number of bytes loaded frmo file
     uint32_t size;
-
-    // Heap-allocated raw file data
-    // Must be released with destroy()
-    char* data;
+    char    *data;
 
     FileContents();
 
@@ -36,4 +31,5 @@ struct FileContents
 bool load_file_contents(const std::string &path, FileContents &file_contents);
 
 } // namespace cg
+
 #endif

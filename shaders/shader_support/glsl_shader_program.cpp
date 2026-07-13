@@ -1,4 +1,4 @@
-#include "shader_support/glsl_shader_program.hpp"
+#include "shaders/shader_support/glsl_shader_program.hpp"
 
 #include <iostream>
 

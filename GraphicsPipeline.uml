@@ -1,34 +1,43 @@
 @startuml
-title OpenGL Rendering Pipeline
+title OpenGL Graphics Pipeline
 
 skinparam linetype ortho
 top to bottom direction
 
-rectangle "1. Vertex Specification\n\nReceives raw vertex data:\npositions, colors, normals,\ntexture coordinates, indices" as VSPEC #LightYellow
+rectangle "1. Vertex Specification\n\nMesh data loaded from OBJ:\nVertices, Normals, UVs,\nIndices" as VSPEC #LightYellow
 
-rectangle "2. Vertex Shader\n\nRuns once per vertex.\nApplies transformations\n(model/view/projection)." as VSHADER #LightBlue
+rectangle "2. Vertex Shader\n\nRuns once per vertex.\nModel * View * Projection\ntransformations.\nOutputs Clip-Space Position." as VSHADER #LightBlue
 
-rectangle "3. Tessellation\n\nOptional stage.\nSubdivides geometry into\nsmaller pieces for detail." as TESS #LightGray
+rectangle "3. Tessellation Shader\n(Optional)\n\nSubdivide geometry\nfor additional detail." as TESS #LightGray
 
-rectangle "4. Geometry Shader\n\nOptional stage.\nCan create, modify,\nor discard primitives." as GSHADER #LightGray
+rectangle "4. Geometry Shader\n(Optional)\n\nCreate, modify,\nor discard primitives." as GSHADER #LightGray
 
-rectangle "5. Vertex Post-Processing\n\nPerforms clipping and prepares\nvertices for assembly." as VPOST #LightYellow
+rectangle "5. Clipping\n\nClip primitives against\nview frustum planes.\nMay generate new vertices." as CLIP #LightYellow
 
-rectangle "6. Primitive Assembly\n\nGroups vertices into\ntriangles, lines, or points." as PRIM #LightYellow
+rectangle "6. Perspective Divide\n\n(x,y,z,w) ->\n(x/w,y/w,z/w)\nProduces NDC coordinates." as PDIV #LightYellow
 
-rectangle "7. Rasterization\n\nConverts primitives into\nfragments (potential pixels)." as RAST #LightYellow
+rectangle "7. Viewport Transform\n\nNDC -> Screen Coordinates\nMaps [-1,1] to pixels." as VIEWPORT #LightYellow
 
-rectangle "8. Fragment Shader\n\nRuns per fragment.\nDetermines final color,\nlighting, textures." as FSHADER #LightBlue
+rectangle "8. Primitive Assembly\n\nIndex buffer groups\nvertices into triangles,\nlines, or points." as PRIM #LightYellow
 
-rectangle "9. Per-Sample Operations\n\nDepth testing,\nstencil testing,\nblending, framebuffer write." as PSAMPLE #LightYellow
+rectangle "9. Rasterization\n\nDetermine covered pixels.\nCompute barycentric\ncoordinates.\nGenerate fragments." as RAST #LightYellow
 
-VSPEC --> VSHADER
-VSHADER --> TESS
-TESS --> GSHADER
-GSHADER --> VPOST
-VPOST --> PRIM
+rectangle "10. Fragment Shader\n\nRuns per fragment.\nTexture sampling,\nlighting, shading." as FSHADER #LightBlue
+
+rectangle "11. Per-Fragment Operations\n\nDepth Test\nStencil Test\nBlending\nMSAA" as PFO #LightYellow
+
+rectangle "12. Framebuffer\n\nFinal pixel colors\nstored in render target." as FB #LightGreen
+
+VSPEC -right-> VSHADER
+VSHADER -right-> TESS
+TESS -right-> GSHADER
+GSHADER --> CLIP
+CLIP -left-> PDIV
+PDIV -left-> VIEWPORT
+VIEWPORT -left-> PRIM
 PRIM --> RAST
-RAST --> FSHADER
-FSHADER --> PSAMPLE
+RAST -right-> FSHADER
+FSHADER -right-> PFO
+PFO -right-> FB
 
 @enduml

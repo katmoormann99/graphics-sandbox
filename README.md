@@ -2,6 +2,9 @@
 
 A sandbox for learning OpenGL, experimenting with rendering techniques, and building interactive 3D scenes.
 
+## Scene Graph Relationships
+![SceneGraphRelationships](SceneGraphRelationships.svg)
+
 ## Downloaded Pieces
 
 ### SDL3
@@ -64,3 +67,8 @@ Verify SDL: </br>
 ## Graphics Pipeline Diagram
 
 ![Graphics Pipeline](GraphicsPipeline.svg)
+
+## Coordinate Space Journey of a Vertex
+
+![Coordinate Space Journey of a Vertex](CoordinateSpaceJourneyOfAVertex.svg)
+
