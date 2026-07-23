@@ -5,6 +5,20 @@ A sandbox for learning OpenGL, experimenting with rendering techniques, and buil
 ## Scene Graph Relationships
 ![SceneGraphRelationships](SceneGraphRelationships.svg)
 
+## Module 3
+OpenGL Scene Graph application rendering transparent polygons
+
+<video controls width="700">
+  <source src="Module3Demo.mp4" type="video/mp4">
+</video>
+
+## Module 2
+OpenGL shader program to draw points or lines based on mouse clicks
+
+<video controls width="700">
+  <source src="Module2Demo.mp4" type="video/mp4">
+</video>
+
 ## Downloaded Pieces
 
 ### SDL3
