@@ -7,15 +7,15 @@
 //	File:    scene_state.hpp
 //	Purpose: Class used to propogate state during traversal of the scene graph.
 //
-//
-//  Modified by Kat Moormann Friday May 01 2026
 //============================================================================
-
 
 #ifndef __SCENE_SCENE_STATE_HPP__
 #define __SCENE_SCENE_STATE_HPP__
 
+#include "geometry/matrix.hpp"
 #include "scene/graphics.hpp"
+
+#include <list>
 
 #include <array>
 
@@ -23,39 +23,50 @@ namespace cg
 {
 
 /**
- * SceneState is like a shared backpack that gets passed around while drawing.
- *
- * When the program draws the scene graph, many different nodes need access to
- * the same OpenGL information, such as:
- *
- * - where vertex position data goes in the shader
- * - where color data goes in the shader
- * - what projection matrix is currently being used
- *
- * Instead of passing all those variables separately, they are grouped together
- * inside this one structure.
+ * Scene state structure. Used to store OpenGL state - shader locations,
+ * matrices, etc.
  */
 struct SceneState
 {
-    // This stores the location of the "position" input in the shader.
-    // A shader needs vertex positions so it knows where to draw each point.
-    GLint position_loc;
+    // Vertex attribute locations
+    GLint position_loc;  // Vertex position attribute location
+    GLint vtx_color_loc; // Vertex color attribute location
+    GLint normal_loc;    // Vertex normal
 
-    // This stores the location of the orthographic projection matrix in the shader.
-    // Orthographic projection is often used for simple 2-D style drawing.
-    GLint ortho_matrix_loc;
+    // Uniform locations
+    GLint ortho_matrix_loc;  // Orthographic projection location (2-D)
+    GLint color_loc;         // Constant color
+    GLint pvm_matrix_loc;    // Composite project, view, model matrix location
+    GLint model_matrix_loc;  // Model matrix location
+    GLint normal_matrix_loc; // Normal matrix location
 
-    // This stores the location of the color value in the shader.
-    // The drawing code can use this to send a color to the GPU.
-    GLint color_loc;
+    // Material uniform locations
+    GLint material_diffuse_loc; // Material diffuse reflection location
 
-    // This stores the actual orthographic projection matrix.
-    //
-    // A matrix is a set of numbers used to transform coordinates.
-    // Here, the matrix helps convert object coordinates into screen coordinates.
-    //
-    // There are 16 floats because this is a 4x4 matrix.
-    std::array<float, 16> ortho;
+    // Current matrices
+    std::array<float, 16> ortho;        // Orthographic projection matrix (2-D)
+    Matrix4x4             ortho_matrix; // Orthographic projection matrix (2-D)
+    Matrix4x4             pv;           // Current composite projection and view matrix
+    Matrix4x4             model_matrix; // Current model matrix
+
+    // Retained state to push/pop modeling matrix
+    std::list<Matrix4x4> model_matrix_stack;
+
+    /**
+     * Initialize scene state prior to drawing.
+     */
+    void init();
+
+    /**
+     * Copy current matrix onto stack
+     */
+    void push_transforms();
+
+    /**
+     * Remove the current matrix from the stack and revert to prior
+     * (or 0 if none are set at this node)
+     */
+    void pop_transforms();
 };
 
 } // namespace cg

@@ -16,7 +16,7 @@
 #include "geometry/geometry.hpp"
 #include "scene/graphics.hpp"
 #include "scene/scene.hpp"
-#include "shaders/shader_support/glsl_shader.hpp"
+#include "shader_support/glsl_shader.hpp"
 
 #include "Module2/line_node.hpp"
 #include "Module2/line_shader_node.hpp"

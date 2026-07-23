@@ -92,7 +92,7 @@ elseif(BUILD_MACOS)
     add_definitions(-DGL_GLEXT_PROTOTYPES)
     add_definitions(-DGL_SILENCE_DEPRECATION)
     find_library(OPENGL_LIB NAMES OpenGL)
-    include_directories(/opt/homebrew/include)
+    include_directories(/usr/local/include)
     list(APPEND MAIN_LIB_LIST 
         "-framework OpenGL")
 elseif(BUILD_LINUX)
@@ -129,8 +129,8 @@ endif()
 ############################################################
 # set(TARGET_LIST "GeometryTest")
 set(TARGET_LIST "Module2")
-# list(APPEND TARGET_LIST "Module2")
-# list(APPEND TARGET_LIST "Module3")
+list(APPEND TARGET_LIST "Module3")
+# list(APPEND TARGET_LIST "Module4")
 
 
 #############################################
@@ -145,7 +145,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 set(SUB_LIB_LIST "")
 add_subdirectory(scene)
 add_subdirectory(geometry)
-add_subdirectory(shaders/shader_support)
+add_subdirectory(shader_support)
 add_subdirectory(filesystem_support)
 
 
