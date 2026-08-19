@@ -24,30 +24,8 @@ SceneNode::~SceneNode() { destroy(); }
 
 void SceneNode::draw(SceneState &scene_state)
 {
-    printf("[SceneNode::draw] ENTER: node='%s', children=%zu\n",
-           name_.c_str(),
-           children_.size());
-
     // Loop through the list and draw the children
-    int child_number = 0;
-
-    for (auto c : children_)
-    {
-        printf("  --> Drawing child %d: '%s'\n",
-               child_number,
-               c->get_name().c_str());
-
-        c->draw(scene_state);
-
-        printf("  <-- Finished child %d: '%s'\n",
-               child_number,
-               c->get_name().c_str());
-
-        child_number++;
-    }
-
-    printf("[SceneNode::draw] EXIT: node='%s'\n",
-           name_.c_str());
+    for(auto c : children_) { c->draw(scene_state); }
 }
 
 void SceneNode::update(SceneState &scene_state)
