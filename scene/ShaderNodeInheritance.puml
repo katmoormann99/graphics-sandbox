@@ -1,0 +1,65 @@
+@startuml
+
+title Shader Node Inheritance Hierarchy
+
+class SceneNode {
+    + draw(SceneState&) : void <<virtual>>
+    + update(SceneState&) : void <<virtual>>
+    + add_child(SceneNode)
+    + set_name(char*)
+    --
+    # children_
+}
+
+abstract class ShaderNode {
+    + create(vertex, fragment) : bool
+    + create_from_source(vertex, fragment) : bool
+    + get_locations() : bool <<pure virtual>>
+    --
+    # vertex_shader_
+    # fragment_shader_
+    # shader_program_
+}
+
+class LightingShaderNode {
+    + get_locations() : bool <<override>>
+    + draw(SceneState&) : void <<override>>
+    + get_position_loc() : int32_t
+    + get_normal_loc() : int32_t
+    --
+    # position_loc_
+    # vertex_normal_loc_
+    # material_color_loc_
+    # pvm_matrix_loc_
+    # model_matrix_loc_
+    # normal_matrix_loc_
+}
+
+SceneNode <|-- ShaderNode : inherits
+ShaderNode <|-- LightingShaderNode : inherits
+
+note right of SceneNode
+  Base scene graph behavior
+
+  draw()   = may be overridden
+  update() = may be overridden
+end note
+
+note right of ShaderNode
+  Abstract class
+
+  get_locations() = 0
+  Derived concrete shader
+  must implement it
+end note
+
+note right of LightingShaderNode
+  Overrides:
+  - draw()
+  - get_locations()
+
+  Inherits without overriding:
+  - update()
+end note
+
+@enduml
