@@ -7,6 +7,7 @@
 //	File:    lighting_shader_node.hpp
 //	Purpose: Derived class to handle the lighting shader program.
 //
+//  Modified by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #include "scene/shader_node.hpp"

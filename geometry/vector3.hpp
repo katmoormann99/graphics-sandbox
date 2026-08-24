@@ -7,6 +7,7 @@
 //	File:    vector3.hpp
 //	Purpose: 3D Vector class.
 //
+//  Modified by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #ifndef __GEOMETRY_VECTOR3_HPP__
