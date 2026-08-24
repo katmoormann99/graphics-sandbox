@@ -8,6 +8,7 @@
 //	Purpose: OpenGL shader program to draw points or lines based on mouse
 //           clicks.
 //
+//  Modified by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #include <SDL3/SDL.h>

@@ -1,0 +1,327 @@
+//============================================================================
+//	Johns Hopkins University Whiting School of Engineering
+//	605.667  Computer Graphics
+//	Instructor:	Brian Russin
+//
+//	Author:  David W. Nesbitt
+//	File:    Module4/main.cpp
+//	Purpose: OpenGL and SDL program to draw a simple 3D animation with
+//          collision detection. The scene contains moving spheres inside
+//          a fixed, cube enclosure. A simple scene graph is used to define the
+//          scene. Transform nodes, geometry nodes, and presentation nodes
+//          are used.
+// 
+// 
+//  Modified Kat Moormann 08 21 2026
+//
+//============================================================================
+
+#include "filesystem_support/file_locator.hpp"
+#include "geometry/geometry.hpp"
+#include "scene/graphics.hpp"
+#include "scene/scene.hpp"
+#include "scene/color_node.hpp"
+
+#include "lighting_shader_node.hpp"
+#include "shader_src.hpp"
+#include "unit_square_node.hpp"
+
+#include <chrono>
+#include <iostream>
+#include <thread>
+#include <vector>
+
+// SDL Objects
+SDL_Window       *g_sdl_window = nullptr;
+SDL_GLContext     g_gl_context;
+constexpr int32_t DRAWS_PER_SECOND = 30;
+constexpr int32_t DRAW_INTERVAL_MILLIS = static_cast<int32_t>(1000.0 / static_cast<double>(DRAWS_PER_SECOND));
+
+// Root of the scene graph to start off with 
+std::shared_ptr<cg::SceneNode> g_scene_root; 
+cg::SceneState g_scene_state;
+
+// Sleep function to help run a reasonable timer
+void sleep(int32_t milliseconds)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+}
+
+// Display call back 
+// Clears the prior scene and then draws the new one 
+void display()
+{
+    // clear the framebuffer and the depth buffer 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Init scene state and draw the scene graph 
+    g_scene_state.init();
+    g_scene_root->draw(g_scene_state);
+
+    // swap the buffers
+    SDL_GL_SwapWindow(g_sdl_window);
+}
+
+/**
+ * Keyboard event handler.
+ */
+bool handle_key_event(const SDL_Event &event)
+{
+    bool cont_program = true;
+
+    switch(event.key.key)
+    {
+        case SDLK_ESCAPE: cont_program = false; break;
+        default: break;
+    }
+
+    return cont_program;
+}
+
+/**
+ * Reshape function. Load a 2-D orthographic projection matrix using the
+ * window width and height so we can directly take window coordinates and
+ * send to OpenGL
+ * @param  width  Window width
+ * @param  height Window height
+ */
+void reshape(int32_t width, int32_t height)
+{
+    // Center the world window in the viewport so it does not
+    // stretch world window
+    float window_aspect = static_cast<float>(width) / static_cast<float>(height);
+    if(window_aspect > 1.0f)
+    {
+        // Window is wider than world
+        int32_t w = static_cast<int32_t>(height);
+        int32_t start_x = static_cast<int32_t>((width - w) * 0.5f);
+        glViewport(start_x, 0, w, height);
+    }
+    else
+    {
+        // Window is taller than world
+        int32_t h = static_cast<int32_t>(width);
+        int32_t start_y = static_cast<int32_t>((height - h) * 0.5f);
+        glViewport(0, start_y, width, h);
+    }
+}
+
+/**
+ * Window event handler.
+ */
+bool handle_window_event(const SDL_Event &event)
+{
+    bool cont_program = true;
+
+    switch(event.type)
+    {
+        case SDL_EVENT_WINDOW_RESIZED:
+        case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+            reshape(event.window.data1, event.window.data2);
+            break;
+        default: break;
+    }
+
+    return cont_program;
+}
+
+/**
+ * Handle Events function.
+ */
+bool handle_events()
+{
+    SDL_Event e;
+    bool      cont_program = true;
+    while(SDL_PollEvent(&e))
+    {
+        switch(e.type)
+        {
+            case SDL_EVENT_QUIT:
+            case SDL_EVENT_WINDOW_CLOSE_REQUESTED: cont_program = false; break;
+
+            case SDL_EVENT_WINDOW_RESIZED:
+            case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED: cont_program = handle_window_event(e); break;
+
+            case SDL_EVENT_KEY_DOWN:
+            case SDL_EVENT_KEY_UP: cont_program = handle_key_event(e); break;
+            default: break;
+        }
+    }
+    return cont_program;
+}
+
+
+// Construct a unit box with outward facing normals 
+std::shared_ptr<cg::SceneNode> construct_unit_box(std::shared_ptr<cg::UnitSquare> unit_square)
+{
+    // Bottom is rotated 180 degrees so it faces outwards
+    auto bottom_transform = std::make_shared<cg::TransformNode>();
+    bottom_transform->translate(0.0f, 0.0f, -0.5f);
+    bottom_transform->rotate_x(180.0f);
+
+    // Back is rotated -90 degrees about x: (z -> y)
+    auto back_transform = std::make_shared<cg::TransformNode>();
+    back_transform->translate(0.0f, 0.5f, 0.0f);
+    back_transform->rotate_x(-90.0f);
+
+    // Front wall is rotated 90 degrees about x: (y -> z)
+    auto front_transform = std::make_shared<cg::TransformNode>();
+    front_transform->translate(0.0f, -0.5f, 0.0f);
+    front_transform->rotate_x(90.0f);
+
+    // Left wall is rotated -90 about y: (z -> -x)
+    auto left_transform = std::make_shared<cg::TransformNode>();
+    left_transform->translate(-0.5f, 0.0f, 00.0f);
+    left_transform->rotate_y(-90.0f);
+
+    // Right wall is rotated 90 degrees about y: (z -> x)
+    auto right_transform = std::make_shared<cg::TransformNode>();
+    right_transform->translate(0.5f, 0.0f, 0.0f);
+    right_transform->rotate_y(90.0f);
+
+    // Top
+    auto top_transform = std::make_shared<cg::TransformNode>();
+    top_transform->translate(0.0f, 0.0f, 0.50f);
+
+    // Creating the SceneNode and adding the 6 sides of the box 
+    auto box = std::make_shared<cg::SceneNode>();
+    box->add_child(back_transform);
+    back_transform->add_child(unit_square);
+    box->add_child(left_transform);
+    left_transform->add_child(unit_square);
+    box->add_child(right_transform);
+    right_transform->add_child(unit_square);
+    box->add_child(front_transform);
+    front_transform->add_child(unit_square);
+    box->add_child(bottom_transform);
+    bottom_transform->add_child(unit_square);
+    box->add_child(top_transform);
+    top_transform->add_child(unit_square);
+
+    return box;
+
+}
+
+std::shared_ptr<cg::TransformNode> make_wall_transform(
+    float tx, float ty, float tz,
+    float rx, float ry, float rz,
+    float sx, float sy, float sz)
+{
+    auto transform = std::make_shared<cg::TransformNode>();
+
+    transform->translate(tx, ty, tz);
+
+    if(rx != 0.0f) transform->rotate_x(rx);
+    if(ry != 0.0f) transform->rotate_y(ry);
+    if(rz != 0.0f) transform->rotate_z(rz);
+
+    transform->scale(sx, sy, sz);
+
+    return transform;
+}
+
+
+void construct_scene()
+{
+    // 1. Create shader
+    auto shader = std::make_shared<cg::LightingShaderNode>();
+
+    if(!shader->create(
+            "Module4/simple_light.vert",
+            "Module4/simple_light.frag") ||
+       !shader->get_locations())
+    {
+        exit(-1);
+    }
+
+    // 2. Create reusable geometry
+    auto unit_square = std::make_shared<cg::UnitSquare>(shader->get_position_loc(), shader->get_normal_loc());
+
+    // 3. Create room transforms
+    auto floor_transform =
+        make_wall_transform(
+            0, 0, 0,
+            0, 0, 0,
+            100, 100, 100
+        );
+
+    auto back_wall_transform =
+        make_wall_transform(
+            0, 50, 50,
+            90, 0, 0,
+            100, 100, 1
+        );
+
+    auto left_wall_transform =
+        make_wall_transform(
+            -50, 0, 50,
+            0, 90, 0,
+            100, 100, 1
+        );
+
+    auto right_wall_transform =
+        make_wall_transform(
+            50, 0, 50,
+            0, -90, 0,
+            100, 100, 1
+        );
+
+    auto ceiling_transform =
+        make_wall_transform(
+            0, 0, 100,
+            180, 0, 0,
+            100, 100, 1
+        );
+
+    // 4. Create colors
+    auto floor_color = std::make_shared<cg::ColorNode>(cg::Color4(0.6f, 0.5f, 0.2f));
+
+    auto back_wall_color = std::make_shared<cg::ColorNode>(cg::Color4(0.9f, 0.7f, 0.5f));
+
+    auto wall_color = std::make_shared<cg::ColorNode>(cg::Color4(1.0f, 1.0f, 1.0f));
+
+    auto ceiling_color = std::make_shared<cg::ColorNode>(cg::Color4(0.1f, 0.4f, 1.0f));
+
+    // 5. Create purple box
+    auto unit_box = construct_unit_box(unit_square);
+    auto box_color = std::make_shared<cg::ColorNode>(cg::Color4(0.5f, 0.0f, 0.5f));
+
+    auto box_transform = std::make_shared<cg::TransformNode>();
+
+    box_transform->translate(25.0f, 25.0f, 10.1f);
+    box_transform->rotate_z(45.0f);
+    box_transform->scale(40.0f, 20.0f, 20.0f);
+
+    // 6. Build scene graph
+    g_scene_root = std::make_shared<cg::SceneNode>();
+    g_scene_root->add_child(shader);
+
+    // Back wall
+    shader->add_child(back_wall_color);
+    back_wall_color->add_child(back_wall_transform);
+    back_wall_transform->add_child(unit_square);
+
+    // Side walls
+    shader->add_child(wall_color);
+
+    wall_color->add_child(left_wall_transform);
+    left_wall_transform->add_child(unit_square);
+
+    wall_color->add_child(right_wall_transform);
+    right_wall_transform->add_child(unit_square);
+
+    // Floor
+    shader->add_child(floor_color);
+    floor_color->add_child(floor_transform);
+    floor_transform->add_child(unit_square);
+
+    // Ceiling
+    shader->add_child(ceiling_color);
+    ceiling_color->add_child(ceiling_transform);
+    ceiling_transform->add_child(unit_square);
+
+    // Box
+    shader->add_child(box_color);
+    box_color->add_child(box_transform);
+    box_transform->add_child(unit_box);
+}

@@ -7,6 +7,7 @@
 //	File:    transform_node.hpp
 //	Purpose: Scene graph transformation node.
 //
+//  Modified by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #ifndef __SCENE_TRANSFORM_NODE_HPP__

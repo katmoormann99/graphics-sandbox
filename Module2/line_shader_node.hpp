@@ -8,6 +8,7 @@
 //	Purpose: Derived class to handle an line shader and its uniforms and
 //           attribute locations.
 //
+//  Modified by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #ifndef __MODULE2_LINE_SHADER_NODE_HPP__

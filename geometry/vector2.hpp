@@ -7,6 +7,7 @@
 //	File:    vector2.hpp
 //	Purpose: 2D Vector class.
 //
+//  Modified by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #ifndef __GEOMETRY_VECTOR2_HPP__
