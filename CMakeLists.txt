@@ -130,7 +130,7 @@ endif()
 # set(TARGET_LIST "GeometryTest")
 set(TARGET_LIST "Module2")
 list(APPEND TARGET_LIST "Module3")
-# list(APPEND TARGET_LIST "Module4")
+list(APPEND TARGET_LIST "Module4")
 
 
 #############################################

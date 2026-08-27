@@ -96,7 +96,7 @@ class TransformNode : public SceneNode
     void update(SceneState &scene_state) override;
 
   protected:
-    // Student to complete - Module 4.
+    Matrix4x4 model_matrix_;
 };
 
 } // namespace cg
