@@ -2,9 +2,7 @@
 layout (location = 0) in vec3 vtx_position;
 layout (location = 1) in vec3 vtx_normal;
 
-// note to self run and see what happens when the smooth is taken away
-// layout (location = 0) smooth out vec4 color;
-layout (location = 0) out vec4 color;
+layout (location = 0) flat out vec4 color;
 
 uniform mat4 normal_matrix;
 uniform mat4 model_matrix;
@@ -27,6 +25,7 @@ void main()
     // Find the direction from the vertex toward the light
     vec3 L = normalize(vec3(light_position - vec3(v)));
 
+    // Gouraud Shading - calculating the lighting at each vertex
     color = vec4(material_color * max(dot(L,N), 0.0), 1.0);
 
     // Transform the vertex into clip coordinates for drawing

@@ -21,15 +21,36 @@
 #include "scene/graphics.hpp"
 #include "scene/scene.hpp"
 #include "scene/color_node.hpp"
+#include "SDL3/SDL.h"
 
-#include "lighting_shader_node.hpp"
-#include "shader_src.hpp"
-#include "unit_square_node.hpp"
+#include "scene/lighting_shader_node.hpp"
+// #include "shader_src.hpp"
+#include "scene/unit_square_node.hpp"
 
 #include <chrono>
 #include <iostream>
 #include <thread>
 #include <vector>
+
+namespace cg
+{
+
+// Simple logging function, should be defined in the cg namespace
+void logmsg(const char *message, ...)
+{
+    // Open file if not already opened
+    static FILE *lfile = NULL;
+    if(lfile == NULL) { lfile = fopen("Module4.log", "w"); }
+
+    va_list arg;
+    va_start(arg, message);
+    vfprintf(lfile, message, arg);
+    putc('\n', lfile);
+    fflush(lfile);
+    va_end(arg);
+}
+
+} // namespace cg
 
 // SDL Objects
 SDL_Window       *g_sdl_window = nullptr;
@@ -223,7 +244,6 @@ std::shared_ptr<cg::TransformNode> make_wall_transform(
 
 void construct_scene()
 {
-    // 1. Create shader
     auto shader = std::make_shared<cg::LightingShaderNode>();
 
     if(!shader->create(
@@ -295,6 +315,11 @@ void construct_scene()
     // 6. Build scene graph
     g_scene_root = std::make_shared<cg::SceneNode>();
     g_scene_root->add_child(shader);
+    
+    // Box
+    shader->add_child(box_color);
+    box_color->add_child(box_transform);
+    box_transform->add_child(unit_box);
 
     // Back wall
     shader->add_child(back_wall_color);
@@ -320,8 +345,122 @@ void construct_scene()
     ceiling_color->add_child(ceiling_transform);
     ceiling_transform->add_child(unit_square);
 
-    // Box
-    shader->add_child(box_color);
-    box_color->add_child(box_transform);
-    box_transform->add_child(unit_box);
+
+}
+
+// Main 
+int main(int argc, char **argv)
+{
+    cg::set_root_paths(argv[0]);
+
+    // Initialize SDL
+    if(!SDL_Init(SDL_INIT_VIDEO))
+    {
+        std::cout << "Error initializing SDL: " << SDL_GetError() << '\n';
+        exit(1);
+    }
+
+    // Initialize display mode and window
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+    SDL_PropertiesID props = SDL_CreateProperties();
+    if(props == 0)
+    {
+        std::cout << "Error creating SDL Window Properties: " << SDL_GetError() << '\n';
+        exit(1);
+    }
+
+    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "Graphics Sandbox Module 4 Kat Moormann");
+    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true);
+    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, 800);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, 800);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, 200);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, 200);
+
+        g_sdl_window = SDL_CreateWindowWithProperties(props);
+    if(g_sdl_window == nullptr)
+    {
+        std::cout << "Error initializing SDL Window" << SDL_GetError() << '\n';
+        exit(1);
+    }
+
+    // Initialize OpenGL
+    g_gl_context = SDL_GL_CreateContext(g_sdl_window);
+
+    std::cout << "OpenGL  " << glGetString(GL_VERSION) << ", GLSL "
+              << glGetString(GL_SHADING_LANGUAGE_VERSION) << '\n';
+
+    #if BUILD_WINDOWS
+        int32_t glew_init_result = glewInit();
+        if(GLEW_OK != glew_init_result)
+        {
+            std::cout << "GLEW Error: " << glewGetErrorString(glew_init_result) << '\n';
+            exit(EXIT_FAILURE);
+        }
+    #endif
+
+    // Set the clear color to black. Any part of the window outside the
+    // viewport should appear black
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    // construct scene
+    construct_scene();
+
+    // Enable depth testing
+    glEnable(GL_DEPTH_TEST);
+
+    // Enable back face polygon removal 
+    glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    
+    // Set a fixed perspective projection. fov = 70, aspect = 1.0, near = 1.0 far = 200.
+    // We are hard-coding viewing and projection matrices since they do not change in
+    // this application.
+    cg::Matrix4x4 projection;
+    projection.m00() = 1.428f;
+    projection.m11() = 1.428f;
+    projection.m22() = -1.010f;
+    projection.m23() = -2.010f;
+    projection.m32() = -1.0f;
+    projection.m33() = 0.0f;
+
+    // Set a fixed camera outside the center of the front wall (imagine
+    // it being a window) looking parallel to the floor
+    cg::Matrix4x4 view;
+    view.m00() = 1.0f;
+    view.m11() = 0.0f;
+    view.m12() = 1.0f;
+    view.m13() = -50.0f;
+    view.m21() = -1.0f;
+    view.m22() = 0.0f;
+    view.m23() = -90.0f;
+    view.m33() = 1.0f;
+
+    // Set the composite projection and viewing matrix
+    // These remain fixed.
+    g_scene_state.pv = projection * view;
+
+    glViewport(0, 0, 800, 800);
+
+    // Main loop
+    while(handle_events())
+    {
+        display();
+        sleep(DRAW_INTERVAL_MILLIS);
+    }
+
+    // Destroy OpenGL Context, SDL Window and SDL
+    SDL_GL_DestroyContext(g_gl_context);
+    SDL_DestroyWindow(g_sdl_window);
+    SDL_Quit();
+
+    return 0;
+
+
 }
