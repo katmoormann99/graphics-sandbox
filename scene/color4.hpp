@@ -3,12 +3,13 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:  David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    color4.hpp
 //	Purpose: Color structure with RGBA. Supports adding and blending colors.
 //           Includes clamping to [0,1] range.
 //
-//  Modified by Kat Moormann Friday May 01 2026
+//  Modified again by Kat Moormann Friday May 01 2026
 //============================================================================
 
 #ifndef __SCENE_COLOR4_HPP__

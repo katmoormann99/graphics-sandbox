@@ -3,7 +3,8 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:  David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    color3.hpp
 //	Purpose: Color structure with RGB. Supports adding and blending colors.
 //           Includes a method to clamp to [0,1] range.

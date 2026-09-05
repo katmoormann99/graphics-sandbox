@@ -3,7 +3,8 @@
 //	605.667  Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:  David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    Module4/main.cpp
 //	Purpose: OpenGL and SDL program to draw a simple 3D animation with
 //          collision detection. The scene contains moving spheres inside
@@ -12,7 +13,7 @@
 //          are used.
 // 
 // 
-//  Modified Kat Moormann 08 21 2026
+//  Modified again Kat Moormann 08 21 2026
 //
 //============================================================================
 

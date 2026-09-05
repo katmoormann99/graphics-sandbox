@@ -3,11 +3,12 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:	 David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    camera_node.hpp
 //	Purpose: Provide support for setting the view and updating the view.
 //
-//  Modified by Kat Moormann Friday May 01 2026
+//  Modified further by Kat Moormann Friday May 01 2026
 //============================================================================
 
 #ifndef __SCENE_CAMERA_NODE_HPP__

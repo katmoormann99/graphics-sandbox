@@ -3,11 +3,12 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:	David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    lighting_shader_node.hpp
 //	Purpose: Derived class to handle the lighting shader program.
 //
-//  Modified by Kat Moormann Monday July 27 2026
+//  Modified again by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #include "scene/shader_node.hpp"

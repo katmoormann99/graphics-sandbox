@@ -3,12 +3,13 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:	David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    line_shader_node.hpp
 //	Purpose: Derived class to handle an line shader and its uniforms and
 //           attribute locations.
 //
-//  Modified by Kat Moormann Monday July 27 2026
+//  Modified again by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #ifndef __MODULE2_LINE_SHADER_NODE_HPP__

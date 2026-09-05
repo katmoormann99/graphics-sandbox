@@ -3,11 +3,12 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:	 David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    transform_node.hpp
 //	Purpose: Scene graph transformation node.
 //
-//  Modified by Kat Moormann Monday July 27 2026
+//  Modified again by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #ifndef __SCENE_TRANSFORM_NODE_HPP__

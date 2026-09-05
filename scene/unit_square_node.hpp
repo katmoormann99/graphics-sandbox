@@ -3,11 +3,12 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:	David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    unit_square_node.hpp
 //	Purpose:	Simple geometry node that defines a unit square.
 // 
-//  Modified by Kat Moormann Monday July 27 2026
+//  Modified again by Kat Moormann Monday July 27 2026
 //
 //============================================================================
 

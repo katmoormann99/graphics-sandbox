@@ -3,7 +3,8 @@
 //	605.667 Computer Graphics and 605.767 Applied Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:	 David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    color_blending_node.hpp
 //	Purpose: Simple presentation node that defines a color and blending.
 //

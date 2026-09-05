@@ -3,12 +3,13 @@
 //	605.667  Computer Graphics
 //	Instructor:	Brian Russin
 //
-//	Author:  David W. Nesbitt
+//	Original Author: David W. Nesbitt
+//	Modified by Kat Moormann
 //	File:    Module2/main.cpp
 //	Purpose: OpenGL shader program to draw points or lines based on mouse
 //           clicks.
 //
-//  Modified by Kat Moormann Monday July 27 2026
+//  Modified futher by Kat Moormann Monday July 27 2026
 //============================================================================
 
 #include <SDL3/SDL.h>
