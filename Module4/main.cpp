@@ -22,6 +22,7 @@
 #include "scene/graphics.hpp"
 #include "scene/scene.hpp"
 #include "scene/color_node.hpp"
+#include "scene/checkerboard_node.hpp"
 #include "SDL3/SDL.h"
 
 #include "scene/lighting_shader_node.hpp"
@@ -229,6 +230,9 @@ std::shared_ptr<cg::TransformNode> make_wall_transform(
     float rx, float ry, float rz,
     float sx, float sy, float sz)
 {
+    // tx, ty, tz = translation
+    // rx, ry, rz = rotation
+    // sx, sy, sz = scale 
     auto transform = std::make_shared<cg::TransformNode>();
 
     transform->translate(tx, ty, tz);
@@ -257,13 +261,21 @@ void construct_scene()
 
     // 2. Create reusable geometry
     auto unit_square = std::make_shared<cg::UnitSquare>(shader->get_position_loc(), shader->get_normal_loc());
+    auto textured_unit_square = std::make_shared<cg::UnitSquare>(shader->get_position_loc(), shader->get_normal_loc(), 2);
+
+    auto floor_checkerboard = std::make_shared<cg::CheckerboardNode>(true);
 
     // 3. Create room transforms
+
+    // The translation is set to zero meaning the floor does not move 
+    // in this coordinate system, Z is effectively the height, so z = 0 places the floor at the bottom of the room
+    // Rotation: this means don't rotate the square at all 
+    // Scale: Make the unit square much larger 
     auto floor_transform =
         make_wall_transform(
-            0, 0, 0,
-            0, 0, 0,
-            100, 100, 100
+            0, 0, 0, // translation
+            0, 0, 0, // rotation
+            100, 100, 100 // scale
         );
 
     auto back_wall_transform =
@@ -338,8 +350,9 @@ void construct_scene()
 
     // Floor
     shader->add_child(floor_color);
-    floor_color->add_child(floor_transform);
-    floor_transform->add_child(unit_square);
+    floor_color->add_child(floor_checkerboard);
+    floor_checkerboard->add_child(floor_transform);
+    floor_transform->add_child(textured_unit_square);
 
     // Ceiling
     shader->add_child(ceiling_color);

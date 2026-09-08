@@ -1,8 +1,10 @@
 #version 410 core
 layout (location = 0) in vec3 vtx_position;
 layout (location = 1) in vec3 vtx_normal;
+layout (location = 2) in vec2 vtx_texcoord;
 
-layout (location = 0) flat out vec4 color;
+layout (location = 0) smooth out vec4 color;
+layout (location = 1) smooth out vec2 texcoord;
 
 uniform mat4 normal_matrix;
 uniform mat4 model_matrix;
@@ -27,6 +29,9 @@ void main()
 
     // Gouraud Shading - calculating the lighting at each vertex
     color = vec4(material_color * max(dot(L,N), 0.0), 1.0);
+
+    // Pass the vertex UV onward
+    texcoord = vtx_texcoord;
 
     // Transform the vertex into clip coordinates for drawing
     gl_Position = pvm_matrix * vec4(vtx_position, 1.0);

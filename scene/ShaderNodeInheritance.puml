@@ -30,6 +30,7 @@ class LightingShaderNode {
     # position_loc_
     # vertex_normal_loc_
     # material_color_loc_
+    # checkerboard_color_loc_
     # pvm_matrix_loc_
     # model_matrix_loc_
     # normal_matrix_loc_

@@ -51,6 +51,7 @@ class LightingShaderNode : public ShaderNode
     GLint position_loc_;       // Vertex position attribute location
     GLint vertex_normal_loc_;  // Vertex normal attribute location
     GLint material_color_loc_; // Material diffuse color location
+    GLint checkerboard_color_loc_; // Checkerboard color location
     GLint pvm_matrix_loc_;     // Composite projection, view, model matrix location
     GLint model_matrix_loc_;   // Modeling composite matrix location
     GLint normal_matrix_loc_;  // Normal transformation matrix location
