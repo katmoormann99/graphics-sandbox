@@ -63,7 +63,7 @@ namespace cg
              *
              * which points in the positive z direction.
              */
-            UnitSquare(int32_t position_loc, int32_t normal_loc);
+            UnitSquare(int32_t position_loc, int32_t normal_loc, int32_t texcoord_loc = -1);
 
             // Destructor
             ~UnitSquare();
@@ -84,6 +84,8 @@ namespace cg
             GLuint vao_; // Vertex array object 
             GLuint vbo_; // Vertex buffer object
             GLsizei vertex_count_; // Number of vertices in the square
+
+            GLuint texcoord_vbo_ = 0;  // Optional texture-coordinate VBO 
     };
 
 

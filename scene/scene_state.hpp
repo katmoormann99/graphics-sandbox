@@ -43,6 +43,7 @@ struct SceneState
 
     // Material uniform locations
     GLint material_diffuse_loc; // Material diffuse reflection location
+    GLint use_checkerboard_loc; // Checkerboard enable/disable uniform
 
     // Current matrices
     std::array<float, 16> ortho;        // Orthographic projection matrix (2-D)

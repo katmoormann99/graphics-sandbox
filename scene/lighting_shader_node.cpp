@@ -26,6 +26,11 @@ bool LightingShaderNode::get_locations()
         std::cout << "Error getting material_color location\n";
         return false;
     }
+    checkerboard_color_loc_ = glGetUniformLocation(shader_program_.get_program(), "use_checkerboard");
+    if (checkerboard_color_loc_ < 0){
+        std::cout << "Error getting the use_checkerboard boolean location\n";
+        return false;
+    }
     pvm_matrix_loc_ = glGetUniformLocation(shader_program_.get_program(), "pvm_matrix");
     if(pvm_matrix_loc_ < 0)
     {
@@ -59,6 +64,7 @@ void LightingShaderNode::draw(SceneState &scene_state)
     scene_state.position_loc = position_loc_;
     scene_state.normal_loc = vertex_normal_loc_;
     scene_state.material_diffuse_loc = material_color_loc_;
+    scene_state.use_checkerboard_loc = checkerboard_color_loc_;
     scene_state.pvm_matrix_loc = pvm_matrix_loc_;
     scene_state.model_matrix_loc = model_matrix_loc_;
     scene_state.normal_matrix_loc = normal_matrix_loc_;

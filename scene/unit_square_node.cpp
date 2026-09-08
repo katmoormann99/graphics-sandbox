@@ -6,7 +6,7 @@
 
 namespace cg
 {
-    UnitSquare::UnitSquare(int32_t position_loc, int32_t normal_loc) : GeometryNode()
+    UnitSquare::UnitSquare(int32_t position_loc, int32_t normal_loc, int32_t texcoord_loc) : GeometryNode()
     {
         std::vector<VertexAndNormal> vertex_list;
         VertexAndNormal vtx;
@@ -90,7 +90,41 @@ namespace cg
         //     stride          = sizeof(VertexAndNormal)
         //     offset          = sizeof(Point3)
 
+
+
+        // Configure texture coordinates ONLY if a texture-coordinate attribute location was provided 
+        if (texcoord_loc >= 0)
+        {
+            const float texcoords[] = {0.0f, 1.0f, // vertex 0
+                                        0.0f, 0.0f, // vertex 1
+                                        1.0f, 1.0f, // vertex 2
+                                        1.0f, 0.0f // vertex 3
+            };
+
+            // Create a second VBO specficially to hold the texture coordinates 
+            glGenBuffers(1, &texcoord_vbo_);
+
+            // Make that VBO the current GL_ARRAY_BUFFER
+            // void glBindBuffer(GLenum target, GLuint buffer)
+            // target = GL_ARRAY_BUFFER which is basically saying "I am binding this buffer so I can use it for vertex attribute data"
+            glBindBuffer(GL_ARRAY_BUFFER, texcoord_vbo_);
+
+            // Copy the texture coordinate data from the CPU memory into the VBO 
+            glBufferData(GL_ARRAY_BUFFER, sizeof(texcoords), texcoords, GL_STATIC_DRAW);
+
+            // TELL the currently bound VAO how to obtain the texture coordinate attribute from the currently bound VBO 
+            glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), (void*)0);
+
+            // Turn on this vertex attribute so the vertex shader can receive data for it
+            glEnableVertexAttribArray(texcoord_loc);
+        }
+
         // Stop configuring this VAO
+        // This must be the very last thing in the constructor 
+        // because it unbinds the VAO 
+        // This is important because glVertexAttribPointer records the attribute configuration
+        // into the currently bound VAO 
+        // if the VAO is already unbound 
         glBindVertexArray(0);
     }
 
